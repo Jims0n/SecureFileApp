@@ -76,9 +76,10 @@ h3 {
 }
 
 .heading {
-  font-size: 2rem;
+  font-size: 1rem;
   font-weight: 700;
-  margin-bottom: 50px;
+  margin-top: 40px;
+  margin-bottom: 10px;
   padding: 0 20px;
 }
 
@@ -110,7 +111,7 @@ h3 {
 
 .form,
 .content {
-  width: 70%;
+  width: 40%;
   margin: 0 auto;
 }
 
@@ -124,7 +125,7 @@ h3 {
   width: 100%;
   padding: 10px;
   border: 1px solid #e6e6e6;
-  border-radius: 5px;
+  border-radius: 6px;
   margin-bottom: 10px;
   font-family: inherit;
 }
@@ -213,3 +214,17 @@ h3 {
     font-size: 1.5rem;
   }
 }
+
+.site_name {
+  font-size: 50px;
+}
+
+.logo {
+  font-size: 40px;
+  
+}
+
+.logo_name {
+  color: #ffd700;
+}
+
