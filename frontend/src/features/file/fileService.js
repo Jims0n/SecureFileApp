@@ -1,7 +1,6 @@
 import axios from "axios"
 
-const API_URL = "/api/upload/"
-
+const API_URL = "/api/file/"
 
 // Create file
 const createFile = async (fileData, token) => {
@@ -27,9 +26,26 @@ const getFiles = async ( token) => {
     return response.data
 }
 
+
+// Download user file
+const downloadFile = async (fileName, token) => {
+    const config = {
+        headers: { 
+            Authorization: `Bearer ${token}`,
+            },
+            responseType: 'blob'
+    }
+
+  const response = await axios.get(API_URL + `download?fileName=${fileName}`, config)
+  
+    return response.data
+    
+}
+
 const fileService = {
     createFile,
-    getFiles
+    getFiles,
+    downloadFile
 }
 
 export default fileService

@@ -1,26 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const {setUpload } = require("../controllers/uploadController")
 const { protect } = require("../middleware/authMiddleWare");
 require('dotenv').config();
-
-const asyncHandler = require("express-async-handler");
-const cors = require("cors");
-const bodyParser = require('body-parser');
-
-const { Storage } = require('@google-cloud/storage');
+const { Storage, Bucket } = require('@google-cloud/storage');
 const multer = require("multer");
-const  {initializeApp} = require("firebase/app");
 const {File} = require("../models/fileModel");
-const {User} = require("../models/userModel");
 const { v4: uuidv4 } = require('uuid');
-
-
-
-
-
-
-
+const uuid = uuidv4();
+const path = require("path")
+const cwd = path.join(__dirname, '..')
+const fs = require("fs")
 
 // Create new storage instance with Firebase project credentials
 const storage = new Storage({
@@ -28,18 +17,11 @@ const storage = new Storage({
     keyFilename: process.env.GCLOUD_APPLICATION_CREDENTIALS,
   });
 
+
   // Create a bucket associated to Firebase storage bucket
 const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET_URL);
 
 // Initiating a memory storage engine to store files as Buffer objects
-
-
-   
-  
-   
-   
-
-
 const uploader = multer({
    
     destination: function(req, file, cb) {
@@ -50,28 +32,18 @@ const uploader = multer({
     limits: {
       fileSize: 5 * 1024 * 1024, // limiting files size to 5 MB
     },
-  }
-  
-  
-  );
-  const uuid = uuidv4();
-
-  
-  
+  } );
  
+
 router.post( "/", protect, uploader.single('fileName', uuid), async (req, res, next) => { 
 
-   
-try {
+    try {
    
     if (!req.file) {
         res.status(400).send('Error, could not upload file');
         console.log(req.file);
         return;
       }
-
-
-
       // Create new blob in the bucket referencing the file
 const blob = bucket.file(req.file.originalname);
 
@@ -93,13 +65,14 @@ blobWriter.on('finish', () => {
   }/o/${encodeURI(blob.name)}?alt=media`;
 
   
-  
-    File.create({
+    File.create({ 
       uploader: req.user.id,
-      fileName: req.file.originalname,
+      fileName: req.file.originalname ,
       downloadLink: publicUrl
     }).then((file) => {
       })
+
+      
   // Return the file name and its public URL
   res
     .status(200)
@@ -108,24 +81,42 @@ blobWriter.on('finish', () => {
 
 // When there is no more data to be consumed from the stream
 blobWriter.end(req.file.buffer);
+} 
 
-} catch (error) {
-    return res.status(400).send(error.message)
-   
+    catch (error) {
+    return res.status(400).send(error.message)  
 }
 
-
-
 }
+); 
+  
+router.get("/download",  async (req, res) => {
+
+const fileName = req.query.fileName
+ 
+
+const file = bucket.file(fileName);
+
+const options = {
+  version: 'v4',
+  action: 'read',
+  expires: Date.now() + 60 * 60 * 1000, // 1 hour
+};
+
+// Generate a signed URL for the file
+file.getSignedUrl(options, (err, url) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  res.send( url );
+ 
+});
+ 
+
+})
 
 
-);
-
-
-  
-  
-  
-  
 
 router.get("/", protect, async (req,res) => {
 
@@ -135,9 +126,6 @@ router.get("/", protect, async (req,res) => {
 }
 )
 
-
-
-//router.route("/:id").put(protect, updateGoal).delete(protect, deleteGoal);
 
 
 module.exports =  router

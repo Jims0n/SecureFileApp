@@ -40,9 +40,18 @@ const Dashboard = () => {
     <section className='content'>
       {files.length > 0 ? (
         <div className='goals'>
-          {files.map((file) => (
-            <FileItem key={file._id} file={file}/>
+        <table>
+        {files.map((file) => (
+          <tr>
+          <td>
+          <FileItem key={file._id} file={file}/>
+          </td>
+          </tr>
+           
           ))}
+          
+        </table>
+          
         </div>
       ) : (<h3>You don't have any files</h3>)}
     </section>

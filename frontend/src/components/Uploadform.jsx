@@ -59,15 +59,16 @@ useEffect(() => {
         );
  
 dispatch(createFile(fileData))
-        // Reset to default values after 3 seconds
-        setTimeout(() => {
-            setSelectedFile(null);
-            setPreview(null);
-            setIsSuccess(false);
-            setFileName(null);
-            setButtonText('Select your file first');
-          }, 3000);
+        
   }
+  // Reset to default values after 3 seconds
+  setTimeout(() => {
+    setSelectedFile(null);
+    setPreview(null);
+    setIsSuccess(false);
+    setFileName(null);
+    setButtonText('Select your file first');
+  }, 3000);
   }
   return (
     <div>

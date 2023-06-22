@@ -20,7 +20,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 app.use(cors());
 
-app.use("/api/upload", require("./routes/uploadRoutes"));
+app.use("/api/file", require("./routes/fileRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 
 app.use(errorHandler)

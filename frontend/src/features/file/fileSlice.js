@@ -3,6 +3,7 @@ import fileService  from "./fileService"
 
 const initialState = {
     files: [],
+    fileUrl: null,
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -26,6 +27,20 @@ export const getFiles = createAsyncThunk('files/getAll', async (_, thunkAPI) => 
     try {
         const token = thunkAPI.getState().auth.user.token
         return await fileService.getFiles( token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) ||
+        error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+
+// Download user File
+export const downloadFile = createAsyncThunk('files/download', async (fileName, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await fileService.downloadFile(fileName, token)
+        
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) ||
         error.message || error.toString()
@@ -68,6 +83,20 @@ export const fileSlice = createSlice({
             state.isLoading = false
             state.isError = true
             state.message = action.payload
+        })
+        .addCase(downloadFile.pending, (state) => {
+            state.isLoading =true
+            
+        })
+        .addCase(downloadFile.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.fileUrl = action.payload
+        })
+        .addCase(downloadFile.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+           
         })
     }
 })

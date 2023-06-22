@@ -7,12 +7,14 @@ import Login from "./pages/Login";
 import Header from "./components/Header";
 
 
+
 function App() {
   return (
     <>
     <Router>
     <div className="container">
-    <Header />
+    
+    <Header /> 
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/register" element={<Register />} />
