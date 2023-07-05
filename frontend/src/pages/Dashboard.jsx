@@ -2,19 +2,15 @@ import {React, useEffect} from 'react';
 import {useSelector, useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import Uploadform from '../components/Uploadform';
-import { getFiles } from '../features/file/fileSlice';
-import FileItem from '../components/FileItem';
-import { useReactTable, getCoreRowModel, } from '@tanstack/react-table';
+import { downloadFile, getFiles } from '../features/file/fileSlice';
 
 import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
 } from '@chakra-ui/react'
 
@@ -42,12 +38,20 @@ const Dashboard = () => {
     dispatch(getFiles())
   }, [user, navigate, isError, message, dispatch])
 
-  // const table = useReactTable({
-    // data: files,
-    // columns,
-    // initialState: { pageIndex: 0 },
-    // getCoreRowModel: getCoreRowModel(),
-  // });
+  const {fileUrl} = useSelector(state => state.files);
+  const handleButtonClick = (event) => {
+    
+    const fileName = event.target.value;
+
+    dispatch(downloadFile(fileName))
+
+    const url = window.URL.createObjectURL(new Blob([fileUrl]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+  }
 
   return (
     <>
@@ -56,59 +60,31 @@ const Dashboard = () => {
 
       </section>
      <Uploadform />
+     <section className='table-content'>
     
      <TableContainer>
       <Table variant='striped' colorScheme='teal'>
-        <TableCaption>Imperial to metric conversion factors</TableCaption>
         <Thead>
           <Tr>
-            <Th>To convert</Th>
-            <Th>into</Th>
-            <Th >multiply by</Th>
+            {heading.map((head, headID) =>
+             <Th key={headID} >{head}</Th>
+            )}
           </Tr>
         </Thead>
         <Tbody>
-          <Tr>
-            <Td>inches</Td>
-            <Td>millimetres (mm)</Td>
-            <Td >25.4</Td>
-          </Tr>
+          {files.map((file, rowID) =>
+            <Tr key={rowID}>
+                <Td>{file._id}</Td>
+                <Td>{file.fileName}</Td>
+                <Td>{new Date(file.createdAt).toLocaleString("en-US")}</Td>
+                <Td><button onClick={handleButtonClick} className='btn' value= {file.fileName} >Download</button></Td>
+            </Tr>
+          )}
         </Tbody>
       </Table>
     </TableContainer>
 
-    <section className='content'>
-    <table style={{ width: 500 }}>
-                <thead>
-                    <tr>
-                        {heading.map((head, headID) =>
-                            <th key={headID} >{head}</th>)
-                        }
-                    </tr>
-                </thead>
-                {/* <tbody>
-                  <tr> 
-                  {files.map((file, rowID) =>
-                        // <TableRow rowContent={rowContent} key={rowID} />)}
-                        <FileItem key={file._id} file={file}/>
-                    )}
-                  </tr> 
-                    
-                </tbody> */}
-                <tbody>
-                {/* <tr> */}
-                {files.map((file, rowID) =>
-                    <tr>
-                        <td>{file._id}</td>
-                        <td>{file.fileName}</td>
-                        <td>{new Date(file.createdAt).toLocaleString("en-US")}</td>
-                        <td><button className='btn' value= {file.fileName} >Download</button></td>
-                    </tr>
-                    )}
-                  
-                {/* </tr> */}
-                </tbody>
-            </table>
+   
             
       {/* {files.length > 0 ? (
         <div className='goals'>
