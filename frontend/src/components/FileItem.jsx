@@ -23,15 +23,15 @@ const FileItem = ({file}) => {
   }
   
   return (
-    <div className='goalss'>
-         {/* <div> */}
+    <div className='goals'>
+         <div>
             {new Date(file.createdAt).toLocaleString("en-US")}
-        {/* </div> */}
+        </div>
         <h2>{file.fileName}</h2>
-        {/* <div> */}
+        <div>
       <button className='btn' value= {file.fileName}  onClick={handleButtonClick}>Download</button>
      
-    {/* </div>  */}
+    </div> 
        
         
     </div>

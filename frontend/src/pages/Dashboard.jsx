@@ -3,7 +3,7 @@ import {useSelector, useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import Uploadform from '../components/Uploadform';
 import { getFiles } from '../features/file/fileSlice';
-import FileItem from '../components/FileItem';
+import {FileItem} from '../components/FileItem';
 
 
 
