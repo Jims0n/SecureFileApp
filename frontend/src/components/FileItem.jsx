@@ -45,7 +45,6 @@ const FileItem = ({file}) => {
     </div> 
        
         
-    </div>
   )
 }
 
