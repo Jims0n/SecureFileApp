@@ -128,8 +128,8 @@ dispatch(createFile(fileData))
                           <i className='icon-upload'></i>
                         )}
                         {/* <input type='file' onChange={onFileSelected}  /> */}
-                        {/* <Input type='file' onChange={onFileSelected} /> */}
-                        <FileUpload
+                        <Input type='file' onChange={onFileSelected} />
+                        {/* <FileUpload
                           accept={'image/*'}
                           multiple
                           // register={register('file_', { validate: validateFiles })}
@@ -137,7 +137,7 @@ dispatch(createFile(fileData))
                           <Button leftIcon={<Icon as={FiFile} />}>
                             Upload
                           </Button>
-                        </FileUpload>
+                        </FileUpload> */}
                       </>
                     )}
                   </>
