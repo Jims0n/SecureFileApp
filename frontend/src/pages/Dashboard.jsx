@@ -2,12 +2,20 @@ import {React, useEffect} from 'react';
 import {useSelector, useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import Uploadform from '../components/Uploadform';
-import { getFiles } from '../features/file/fileSlice';
-import {FileItem} from '../components/FileItem';
+import { downloadFile, getFiles } from '../features/file/fileSlice';
+
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+} from '@chakra-ui/react'
 
 
-
-
+const heading = ['ID', 'File Name', 'Created At', 'Download']
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -29,6 +37,22 @@ const Dashboard = () => {
     
     dispatch(getFiles())
   }, [user, navigate, isError, message, dispatch])
+
+  const {fileUrl} = useSelector(state => state.files);
+  const handleButtonClick = (event) => {
+    
+    const fileName = event.target.value;
+
+    dispatch(downloadFile(fileName))
+
+    const url = window.URL.createObjectURL(new Blob([fileUrl]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+  }
+
   return (
     <>
       <section className='heading'>
@@ -36,9 +60,33 @@ const Dashboard = () => {
 
       </section>
      <Uploadform />
+     <section className='table-content'>
     
-    <section className='content'>
-      {files.length > 0 ? (
+     <TableContainer>
+      <Table variant='striped' colorScheme='teal'>
+        <Thead>
+          <Tr>
+            {heading.map((head, headID) =>
+             <Th key={headID} >{head}</Th>
+            )}
+          </Tr>
+        </Thead>
+        <Tbody>
+          {files.map((file, rowID) =>
+            <Tr key={rowID}>
+                <Td>{file._id}</Td>
+                <Td>{file.fileName}</Td>
+                <Td>{new Date(file.createdAt).toLocaleString("en-US")}</Td>
+                <Td><button onClick={handleButtonClick} className='btn' value= {file.fileName} >Download</button></Td>
+            </Tr>
+          )}
+        </Tbody>
+      </Table>
+    </TableContainer>
+
+   
+            
+      {/* {files.length > 0 ? (
         <div className='goals'>
         <table>
         {files.map((file) => (
@@ -53,7 +101,7 @@ const Dashboard = () => {
         </table>
           
         </div>
-      ) : (<h3>You don't have any files</h3>)}
+      ) : (<h3>You don't have any files</h3>)} */}
     </section>
      
     </>

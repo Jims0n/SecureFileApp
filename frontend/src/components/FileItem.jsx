@@ -23,13 +23,24 @@ const FileItem = ({file}) => {
   }
   
   return (
-    <div className='goals'>
-         <div>
-            {new Date(file.createdAt).toLocaleString("en-US")}
-        </div>
-        <h2>{file.fileName}</h2>
-        <div>
-      <button className='btn' value= {file.fileName}  onClick={handleButtonClick}>Download</button>
+    <div className='goalss'>
+      
+                <td>{file.fileName}</td>
+          
+                <td>{new Date(file.createdAt).toLocaleString("en-US")}</td>
+          
+                <td><button className='btn' value= {file.fileName}  onClick={handleButtonClick}>Download</button></td>
+           
+            {/* <tr>
+                {file.map((val, rowID) => <td key={rowID}>{val.fileName}</td>)}
+            </tr> */}
+
+         {/* <div> */}
+            {/* {new Date(file.createdAt).toLocaleString("en-US")} */}
+        {/* </div> */}
+        {/* <h2>{file.fileName}</h2> */}
+        {/* <div> */}
+      {/* <button className='btn' value= {file.fileName}  onClick={handleButtonClick}>Download</button> */}
      
     </div> 
        
